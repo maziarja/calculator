@@ -16,7 +16,7 @@ const StyledScreen = styled.form`
   p {
     font-size: 1.8rem;
     color: var(--color-heading);
-    opacity: 0.4;
+    opacity: 0.5;
   }
 `;
 const Input = styled.input`
@@ -30,6 +30,12 @@ const Input = styled.input`
   font-size: 3.2rem;
   padding-block: 2rem;
   border-radius: 0.8rem;
+  &:disabled {
+    opacity: 1;
+    color: var(--color-heading);
+    background-color: var(--bg-color-screen);
+    -webkit-text-fill-color: var(--color-heading);
+  }
 `;
 
 function Screen() {
