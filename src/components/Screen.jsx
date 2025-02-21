@@ -15,7 +15,8 @@ const StyledScreen = styled.form`
   }
   p {
     font-size: 1.8rem;
-    color: white;
+    color: var(--color-heading);
+    opacity: 0.6;
   }
 `;
 const Input = styled.input`
@@ -37,9 +38,9 @@ function Screen() {
   return (
     <StyledScreen>
       <div className="calc">
-        <p>{`${lastValue ? lastValue : ""}`}</p>
+        <p>{`${lastValue ? lastValue.toLocaleString() : ""}`}</p>
         <p>{`${lastValue ? operator : ""}`}</p>
-        <p>{`${value ? value : ""}`}</p>
+        <p>{`${value ? value.toLocaleString() : ""}`}</p>
       </div>
       <Input
         type="text"
