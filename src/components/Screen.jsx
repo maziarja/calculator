@@ -23,7 +23,7 @@ const Input = styled.input`
   text-align: right;
   width: 100%;
   padding-right: 2rem;
-  background-color: inherit;
+  background-color: var(--bg-color-screen);
   font-family: inherit;
   border: none;
   color: var(--color-heading);
