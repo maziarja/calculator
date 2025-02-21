@@ -16,7 +16,7 @@ const StyledScreen = styled.form`
   p {
     font-size: 1.8rem;
     color: var(--color-heading);
-    opacity: 0.8;
+    opacity: 0.4;
   }
 `;
 const Input = styled.input`
