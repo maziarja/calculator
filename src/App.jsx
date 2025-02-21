@@ -13,7 +13,6 @@ const StyledApp = styled.div`
     max-width: 58rem;
     width: 90%;
     margin-inline: auto;
-    box-shadow: 0 0 2px rgba(255, 255, 255, 0.05);
   }
 `;
 function App() {
