@@ -1,3 +1,4 @@
+import { evaluate } from "mathjs";
 import { createContext, useContext, useEffect, useReducer } from "react";
 
 const AppContext = createContext();
@@ -7,114 +8,62 @@ const initialValue = {
     ? JSON.parse(localStorage.getItem("theme"))
     : 1,
   value: "",
-  lastValue: "",
-  operator: "",
 };
 
 function reducer(state, action) {
-  switch (action.type) {
-    case "changingTheme": {
-      return {
-        ...state,
-        theme: state.theme >= 3 ? 1 : state.theme + 1,
-      };
-    }
-    case "setValue": {
-      return {
-        ...state,
-        value: (state.value + action.payload)
-          .replace(/\.{2,}/, ".")
-          .replace(/^0+/, ""),
-      };
-    }
-    case "deleteValue": {
-      return {
-        ...state,
-        value: state.value.slice(0, state.value.length - 1),
-      };
-    }
-    case "sumValue": {
-      return {
-        ...state,
-        operator: "+",
-        lastValue: !state.lastValue ? state.value : state.lastValue,
-        value: "",
-      };
-    }
-    case "subtractValue": {
-      return {
-        ...state,
-        operator: "-",
-        lastValue:
-          !state.lastValue && state.value !== "-"
-            ? state.value
-            : state.lastValue,
-        value: "",
-      };
-    }
-    case "divideValue": {
-      return {
-        ...state,
-        operator: "/",
-        lastValue: !state.lastValue ? state.value : state.lastValue,
-        value: "",
-      };
-    }
-    case "multiplyValue": {
-      return {
-        ...state,
-        operator: "x",
-        lastValue: !state.lastValue ? state.value : state.lastValue,
-        value: "",
-      };
-    }
-
-    case "result": {
-      if (state.lastValue !== "") {
-        let newValue;
-        if (state.operator === "+")
-          newValue = Number(state.lastValue) + Number(state.value);
-        if (state.operator === "-")
-          newValue = Number(state.lastValue) - Number(state.value);
-        if (state.operator === "/")
-          newValue = Number(state.lastValue) / Number(state.value);
-        if (state.operator === "x")
-          newValue = Number(state.lastValue) * Number(state.value);
+  try {
+    switch (action.type) {
+      case "changingTheme": {
         return {
           ...state,
-          value: newValue,
-          lastValue: "",
+          theme: state.theme >= 3 ? 1 : state.theme + 1,
         };
       }
-      return state;
-    }
+      case "setValue": {
+        return {
+          ...state,
+          value: (state.value + action.payload)
+            .replace(/\.{2,}/, ".")
+            .replace(/^0+/, "")
+            .replace(/([*/\-+])[*/\-+]+/g, "$1"),
+        };
+      }
+      case "deleteValue": {
+        return {
+          ...state,
+          value: state.value.slice(0, state.value.length - 1),
+        };
+      }
 
-    case "reset": {
-      return {
-        ...state,
-        value: "",
-        lastValue: "",
-        operator: "",
-        result: "",
-      };
+      case "result": {
+        return {
+          ...state,
+          value: evaluate(state.value),
+        };
+      }
+
+      case "reset": {
+        return {
+          ...state,
+          value: "",
+        };
+      }
+      default:
+        throw new Error("Unknown action");
     }
-    default:
-      throw new Error("Unknown action");
+  } catch (err) {
+    console.log(err);
+    return { ...state, value: "Invalid Syntax" };
   }
 }
 
 function AppProvider({ children }) {
-  const [{ theme, value, lastValue, operator }, dispatch] = useReducer(
-    reducer,
-    initialValue
-  );
+  const [{ theme, value }, dispatch] = useReducer(reducer, initialValue);
   useEffect(() => {
     localStorage.setItem("theme", JSON.stringify(theme));
   }, [theme]);
   return (
-    <AppContext.Provider
-      value={{ theme, value, lastValue, dispatch, operator }}
-    >
+    <AppContext.Provider value={{ theme, value, dispatch }}>
       {children}
     </AppContext.Provider>
   );

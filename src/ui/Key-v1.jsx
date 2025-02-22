@@ -73,19 +73,22 @@ const StyledKey = styled.div`
 `;
 
 function Key({ type, children, onClick }) {
-  const { dispatch } = useApp();
+  const { dispatch, value, operator } = useApp();
   const ref = useRef(false);
 
   useEffect(() => {
     if (ref.current) return;
     window.addEventListener("keydown", (e) => {
-      if (children === e.key && children !== "=") {
+      if (children === e.key && !isNaN(Number(children))) {
         dispatch({
           type: "setValue",
-          payload: e.key !== "x" ? e.key : "*",
+          payload: e.key,
         });
       }
-
+      if (e.key === "+" || e.key === "=") dispatch({ type: "sumValue" });
+      if (e.key === "-") dispatch({ type: "subtractValue" });
+      if (e.key === "*") dispatch({ type: "multiplyValue" });
+      if (e.key === "/") dispatch({ type: "divideValue" });
       if (e.key === "Enter") dispatch({ type: "result" });
       if (e.key === "Escape") dispatch({ type: "reset" });
     });
@@ -95,13 +98,10 @@ function Key({ type, children, onClick }) {
   return (
     <StyledKey
       onClick={() => {
-        children !== "RESET" &&
-        children !== "DEL" &&
-        children !== "=" &&
-        children !== "."
+        (value === "" && children === "-") || !isNaN(Number(children))
           ? dispatch({
               type: "setValue",
-              payload: children !== "x" ? children : "*",
+              payload: children,
             })
           : onClick();
       }}

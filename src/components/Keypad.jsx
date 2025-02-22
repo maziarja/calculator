@@ -16,11 +16,15 @@ const StyledKeypad = styled.div`
 `;
 
 function Keypad() {
-  const { lastValue, value, operator, dispatch } = useApp();
-  function handleDotClick() {
-    if (!value.includes(".")) dispatch({ type: "setValue", payload: "." });
-  }
+  const { value, dispatch } = useApp();
 
+  function handleDotClick() {
+    value
+      .split(/[*/\-+]/)
+      .map(
+        (d) => !d.includes(".") && dispatch({ type: "setValue", payload: "." })
+      );
+  }
   return (
     <StyledKeypad>
       <Key>7</Key>
@@ -28,8 +32,7 @@ function Keypad() {
       <Key>9</Key>
       <Key
         onClick={() => {
-          if (operator && !lastValue) return dispatch({ type: "reset" });
-          dispatch({ type: "deleteValue" });
+          if (typeof value === "string") dispatch({ type: "deleteValue" });
         }}
         type="del"
       >

@@ -8,6 +8,16 @@ const StyledScreen = styled.form`
   border-radius: 0.8rem;
   margin-bottom: 2rem;
   padding-block: 1rem;
+  .calc {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem;
+  }
+  p {
+    font-size: 1.8rem;
+    color: var(--color-heading);
+    opacity: 0.5;
+  }
 `;
 const Input = styled.input`
   text-align: right;
@@ -29,20 +39,18 @@ const Input = styled.input`
 `;
 
 function Screen() {
-  const { value } = useApp();
+  const { value, operator, lastValue } = useApp();
 
   return (
     <StyledScreen>
+      <div className="calc">
+        <p>{`${lastValue ? lastValue.toLocaleString() : ""}`}</p>
+        <p>{`${lastValue ? operator : ""}`}</p>
+        <p>{`${value ? value.toLocaleString() : ""}`}</p>
+      </div>
       <Input
         type="text"
-        value={
-          value !== ""
-            ? String(value).replace(
-                /\d+(?=\.\d+)|(?<!\.\d*)\b\d+\b/g,
-                (match) => Number(match).toLocaleString()
-              )
-            : 0
-        }
+        value={value && !isNaN(value) ? Number(value).toLocaleString() : 0}
         disabled
       />
     </StyledScreen>
