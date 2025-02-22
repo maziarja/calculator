@@ -38,7 +38,7 @@ function reducer(state, action) {
       case "result": {
         return {
           ...state,
-          value: evaluate(state.value),
+          value: state.value ? evaluate(state.value) : 0,
         };
       }
 

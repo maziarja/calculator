@@ -86,7 +86,7 @@ function Key({ type, children, onClick }) {
         });
       }
 
-      if (e.key === "Enter") dispatch({ type: "result" });
+      // if (e.key === "Enter") dispatch({ type: "result" });
       if (e.key === "Escape") dispatch({ type: "reset" });
     });
     ref.current = true;
